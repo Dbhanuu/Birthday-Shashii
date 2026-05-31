@@ -1,0 +1,621 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Happiest Birthday Shashii</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@300;400;600&display=swap');
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #ffe6e6, #ffb3c6, #ffc0cb);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+            position: relative;
+        }
+
+        h1, h2, .script-font {
+            font-family: 'Dancing Script', cursive;
+            color: #d84b6b;
+        }
+
+        h1 { font-size: 3rem; margin-bottom: 10px; }
+        h2 { font-size: 2.5rem; margin-bottom: 10px; }
+
+        p {
+            color: #555;
+            line-height: 1.6;
+        }
+
+        .screen {
+            display: none;
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            max-width: 850px;
+            width: 90%;
+            max-height: calc(100vh - 40px);
+            overflow-y: auto;
+            z-index: 10;
+            animation: fadeIn 0.8s ease;
+        }
+
+        .screen.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .flex-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 30px;
+        }
+
+        .text-section {
+            flex: 1;
+            min-width: 250px;
+            text-align: center;
+        }
+
+        #screen1 .text-section {
+            align-items: flex-start;
+            text-align: left;
+        }
+
+        .hero-image {
+            width: min(100%, 280px);
+            aspect-ratio: 7 / 5;
+            height: auto;
+            object-fit: cover;
+            display: block;
+            border-radius: 20px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            flex: 0 0 auto;
+        }
+
+        .btn {
+            background-color: #ff4b72;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 16px;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: transform 0.2s, background-color 0.2s;
+            margin-top: 20px;
+            font-family: 'Poppins', sans-serif;
+            box-shadow: 0 4px 15px rgba(255, 75, 114, 0.4);
+        }
+
+        .btn:hover {
+            background-color: #e6395e;
+            transform: scale(1.05);
+        }
+
+        .collage {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 10px;
+            flex: 1.5;
+            min-width: 300px;
+            align-items: stretch;
+        }
+        .collage img {
+            width: 100%;
+            aspect-ratio: 5 / 7;
+            height: auto;
+            object-fit: cover;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            display: block;
+        }
+
+        .letter {
+            background: #fff8eb;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.05);
+            flex: 2;
+            min-width: 300px;
+            font-family: 'Dancing Script', cursive;
+            font-size: 1.5rem;
+            color: #444;
+            text-align: left;
+            line-height: 1.8;
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+        }
+        .card {
+            background-color: transparent;
+            height: 120px;
+            perspective: 1000px;
+            cursor: pointer;
+        }
+        .card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
+        }
+        .card.flipped .card-inner {
+            transform: rotateY(180deg);
+        }
+        .card-front, .card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 15px;
+            box-sizing: border-box;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .card-front {
+            background-color: #ff9a9e;
+            color: white;
+            font-size: 28px;
+        }
+        .card-back {
+            background-color: white;
+            color: #d84b6b;
+            transform: rotateY(180deg);
+            font-size: 14px;
+            border: 2px solid #ff9a9e;
+        }
+
+        .gift-container {
+            text-align: center;
+            padding: 50px;
+        }
+        .gift-icon {
+            font-size: 100px;
+            cursor: pointer;
+            display: inline-block;
+            transition: transform 0.3s;
+            animation: shake 2s infinite;
+        }
+        .gift-icon:hover {
+            transform: scale(1.1);
+        }
+        @keyframes shake {
+            0% { transform: rotate(0deg); }
+            25% { transform: rotate(-10deg); }
+            50% { transform: rotate(10deg); }
+            75% { transform: rotate(-10deg); }
+            100% { transform: rotate(0deg); }
+        }
+
+        .heart {
+            position: absolute;
+            color: #ff4b72;
+            opacity: 0.5;
+            animation: float 6s ease-in infinite;
+            z-index: 1;
+        }
+        @keyframes float {
+            0% { transform: translateY(100vh) scale(0); opacity: 0; }
+            50% { opacity: 0.6; }
+            100% { transform: translateY(-100px) scale(1.5); opacity: 0; }
+        }
+
+        .screen { padding: 32px; max-width: 920px; margin: 20px; box-sizing: border-box; }
+        .btn { min-width: 160px; padding: 14px 26px; font-size: 16px; }
+        .card { height: 120px; min-height: 90px; }
+        .gift-icon { font-size: 100px; }
+        .heart { font-size: 14px; opacity: 0.6; }
+
+        @media (max-width: 900px) {
+            .flex-container { flex-direction: column; align-items: center; gap: 22px; }
+            h1 { font-size: 2.25rem; text-align: center; }
+            h2 { font-size: 1.9rem; text-align: center; }
+            .collage { grid-template-columns: repeat(2, minmax(0, 1fr)); width: 100%; }
+            #screen1 .text-section { align-items: center; text-align: center; }
+            .hero-image { width: min(100%, 260px); }
+            .letter { font-size: 1.25rem; padding: 22px; }
+            .card { height: 110px; }
+            .btn { width: 100%; max-width: 360px; }
+            .screen { padding: 28px; }
+        }
+
+        @media (max-width: 600px) {
+            body { background: linear-gradient(135deg, #fff2f4, #ffdbe6); }
+            .flex-container { gap: 16px; }
+            h1 { font-size: 1.9rem; }
+            h2 { font-size: 1.4rem; }
+            p { font-size: 0.98rem; }
+            .collage { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; }
+            #screen1 .text-section { align-items: center; text-align: center; }
+            .hero-image { width: min(100%, 220px); }
+            .letter { font-size: 1.1rem; padding: 18px; }
+            .grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+            .card { height: 100px; font-size: 14px; }
+            .card-front { font-size: 22px; }
+            .card-back { font-size: 13px; padding: 10px; }
+            .gift-icon { font-size: 82px; }
+            .btn { padding: 14px; font-size: 15px; border-radius: 14px; }
+            .screen { padding: 20px; width: calc(100% - 40px); }
+            .heart { display: none; }
+        }
+
+        @media (max-width: 380px) {
+            h1 { font-size: 1.6rem; }
+            h2 { font-size: 1.15rem; }
+            .collage { grid-template-columns: 1fr; }
+            #screen1 .text-section { align-items: center; text-align: center; }
+            .hero-image { width: min(100%, 190px); }
+            .grid { grid-template-columns: 1fr; }
+            .card { height: 86px; }
+            .gift-icon { font-size: 64px; }
+            .letter { font-size: 1rem; line-height: 1.5; }
+            .btn { padding: 12px 18px; font-size: 15px; }
+            .screen { padding: 16px; margin: 12px; }
+        }
+
+        @media (min-resolution: 2dppx) {
+            .collage img { box-shadow: 0 6px 18px rgba(0,0,0,0.12); }
+        }
+
+        /* Heart animation screen */
+        #screen6 {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 100;
+            background: #030002;
+        }
+
+        #heartCanvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+
+        #heartMessage {
+            position: absolute;
+            z-index: 2;
+            color: #ffffff;
+            font-size: 2rem;
+            font-style: italic;
+            text-align: center;
+            width: 100%;
+            top: 45%;
+            opacity: 0;
+            text-shadow: 0 0 15px rgba(255, 105, 180, 0.9);
+            transition: opacity 1.5s ease-in-out;
+            pointer-events: none;
+        }
+
+        #heartMessage.show-text {
+            opacity: 1;
+        }
+
+        #backBtn {
+            position: absolute;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 3;
+        }
+    </style>
+</head>
+<body>
+
+    <div id="screen1" class="screen active">
+        <div class="flex-container">
+            <div class="text-section">
+                <h1>Hyy Shashii.. 🤍</h1>
+                <p>A tiny corner of the internet, made just for you - to celebrate the most special person on her most special day. 🎀</p>
+                <button class="btn" onclick="nextScreen('screen1', 'screen2')">See My Favorites ></button>
+            </div>
+            <img class="hero-image" src="24.jpg" alt="Cute illustration">
+        </div>
+    </div>
+
+    <div id="screen2" class="screen">
+        <div class="flex-container">
+            <div class="collage">
+                <img src="1.jpeg" alt="Memory 1">
+                <img src="2.jpeg" alt="Memory 2">
+                <img src="3.jpeg" alt="Memory 3">
+                <img src="4.jpeg" alt="Memory 4">
+                <img src="5.jpeg" alt="Memory 5">
+                <img src="6.jpeg" alt="Memory 6">
+            </div>
+            <div class="text-section">
+                <h2>These are my Favorites</h2>
+                <p>These are the most beautiful photos of you that I have. But honestly, you are much more beautiful in real life than in any picture. Sorry for keeping your photos with me. May you always bloom beautifully and keep shining every day...🌼</p>
+                <button class="btn" onclick="nextScreen('screen2', 'screen3')">Read My Heart 🤍</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="screen3" class="screen">
+        <div class="flex-container">
+            <div class="letter">
+                Dear Shashii...,<br><br>
+                Happy 24th Birthday, Shashii… 🎂<br><br>
+                There’s only a little time left before you finish your time at campus, isn’t there?<br>
+                I don’t even know if we’ll get the chance to meet again during that short time. :(<br><br>
+                Anyway, I truly wish that, little by little, you’ll be able to achieve all of your dreams. If you ever have the time, I hope you’ll do an Event Management course as well, because I know that’s something you really like.<br><br>
+                Even on such a wonderful day as today, please don’t be upset because of me. I don’t think I’ll ever understand why you became such a special person in my life. What I do know is that I’m incredibly proud that the person I care about this much is you and no one else.<br><br>
+                Whatever happens in life, keep moving forward and achieve your goals. I truly hope you win in life and find all the happiness and success you deserve.<br><br>
+                Happy Birthday once again, Shashii. ❤️<br><br>
+                The person you hate the most<br>
+                Dakshina..            </div>
+            <div class="text-section">
+                <h2>A Little Note</h2>
+                <p>A few words from the bottom of my heart...</p>
+                <button class="btn" onclick="nextScreen('screen3', 'screen4')">Let's Play a Game! ></button>
+            </div>
+        </div>
+    </div>
+
+    <div id="screen4" class="screen" style="text-align: center;">
+        <h2>Why You're Special 🎂</h2>
+        <p>Click on the cards to reveal why you're the best!</p>
+        <div class="grid">
+            <div class="card" onclick="this.classList.toggle('flipped')">
+                <div class="card-inner"><div class="card-front">?</div><div class="card-back">You have the most beautiful eyes I have ever seen.</div></div>
+            </div>
+            <div class="card" onclick="this.classList.toggle('flipped')">
+                <div class="card-inner"><div class="card-front">?</div><div class="card-back">You carry yourself with a confidence and pride that perfectly matches your beauty.</div></div>
+            </div>
+            <div class="card" onclick="this.classList.toggle('flipped')">
+                <div class="card-inner"><div class="card-front">?</div><div class="card-back">You have the most beautiful long hair.</div></div>
+            </div>
+            <div class="card" onclick="this.classList.toggle('flipped')">
+                <div class="card-inner"><div class="card-front">?</div><div class="card-back">You believe in yourself more than anyone else does.</div></div>
+            </div>
+            <div class="card" onclick="this.classList.toggle('flipped')">
+                <div class="card-inner"><div class="card-front">?</div><div class="card-back">You are a queen in every way</div></div>
+            </div>
+            <div class="card" onclick="this.classList.toggle('flipped')">
+                <div class="card-inner"><div class="card-front">?</div><div class="card-back">You have a deep respect for Buddhism and live by its teachings and values.</div></div>
+            </div>
+            <div class="card" onclick="this.classList.toggle('flipped')">
+                <div class="card-inner"><div class="card-front">?</div><div class="card-back">You have great respect for the people who are closest to you.</div></div>
+            </div>
+            <div class="card" onclick="this.classList.toggle('flipped')">
+                <div class="card-inner"><div class="card-front">?</div><div class="card-back">The confidence you have that you will achieve your dreams, no matter what, is truly admirable.</div></div>
+            </div>
+            <div class="card" onclick="this.classList.toggle('flipped')">
+                <div class="card-inner"><div class="card-front">?</div><div class="card-back">The love and respect you have for your mother and father are something very special.</div></div>
+            </div>
+        </div>
+        <button class="btn" onclick="nextScreen('screen4', 'screen5')">Next ></button>
+    </div>
+
+    <div id="screen5" class="screen">
+        <div class="gift-container">
+            <h2 style="font-size: 3rem;">Tap to Open!</h2>
+            <div class="gift-icon" onclick="openGift()">🎁</div>
+        </div>
+    </div>
+
+    <!-- Heart Particle Animation Screen -->
+    <div id="screen6">
+        <canvas id="heartCanvas"></canvas>
+        <div id="heartMessage">Maybe in another life, you will love me.</div>
+        <div style="position:absolute; bottom:100px; left:50%; transform:translateX(-50%); z-index:3; display:flex; gap:12px;">
+            <button class="btn" id="replayBtn" onclick="replayAnimation()">Play Again</button>
+        </div>
+        <button class="btn" id="backBtn" onclick="backToStart()">↩ Back to Start</button>
+    </div>
+
+    <audio id="bgAudio" src="123.mpeg" preload="auto"></audio>
+
+    <script>
+        function nextScreen(currentScreenId, nextScreenId) {
+            document.getElementById(currentScreenId).classList.remove('active');
+            document.getElementById(nextScreenId).classList.add('active');
+        }
+
+        function createHeart() {
+            const heart = document.createElement('div');
+            heart.classList.add('heart');
+            heart.innerHTML = '🤍';
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.animationDuration = Math.random() * 3 + 4 + 's';
+            heart.style.fontSize = Math.random() * 15 + 10 + 'px';
+            document.body.appendChild(heart);
+            setTimeout(() => { heart.remove(); }, 7000);
+        }
+        setInterval(createHeart, 400);
+
+        // ---- Gift & Heart Animation ----
+        let heartInitialized = false;
+        let heartAnimFrame = null;
+        let heartResizeHandler = null;
+        let bgAudio = null;
+        let audioPlaying = false;
+
+        // reference audio element (inserted just above this script)
+        bgAudio = document.getElementById('bgAudio');
+
+        function openGift() {
+            document.getElementById('screen5').classList.remove('active');
+            document.getElementById('screen6').style.display = 'block';
+            if (bgAudio) {
+                try { bgAudio.currentTime = 0; bgAudio.play(); audioPlaying = true; } catch (e) {}
+            }
+            if (!heartInitialized) {
+                heartInitialized = true;
+                initHeartAnimation();
+            }
+        }
+
+        function backToStart() {
+            document.getElementById('screen6').style.display = 'none';
+            document.getElementById('heartMessage').classList.remove('show-text');
+            if (heartAnimFrame) {
+                cancelAnimationFrame(heartAnimFrame);
+                heartAnimFrame = null;
+            }
+            if (bgAudio) { try { bgAudio.pause(); bgAudio.currentTime = 0; } catch(e) {} audioPlaying = false; }
+            heartInitialized = false;
+            document.getElementById('screen1').classList.add('active');
+        }
+
+        function replayAnimation() {
+            // stop any running animation
+            if (heartAnimFrame) {
+                cancelAnimationFrame(heartAnimFrame);
+                heartAnimFrame = null;
+            }
+            document.getElementById('heartMessage').classList.remove('show-text');
+            // restart audio
+            if (bgAudio) {
+                try { bgAudio.currentTime = 0; bgAudio.play(); audioPlaying = true; } catch(e) {}
+            }
+            // allow init even if previously initialized
+            heartInitialized = true;
+            initHeartAnimation();
+        }
+
+        function initHeartAnimation() {
+            const canvas = document.getElementById('heartCanvas');
+            const ctx = canvas.getContext('2d');
+            const message = document.getElementById('heartMessage');
+
+            function resize() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            }
+            // remove previous handler if present to avoid duplicate listeners
+            if (heartResizeHandler) window.removeEventListener('resize', heartResizeHandler);
+            heartResizeHandler = resize;
+            window.addEventListener('resize', heartResizeHandler);
+            resize();
+
+            let particles = [];
+            let animationPhase = 'draw';
+            let startTime = Date.now();
+            let drawing = true;
+            let t = Math.PI;
+            const maxT = Math.PI * 3;
+
+            function getHeartPoint(angle) {
+                const scale = Math.min(canvas.width, canvas.height) / 45;
+                const x = 16 * Math.pow(Math.sin(angle), 3);
+                const y = 13 * Math.cos(angle) - 5 * Math.cos(2 * angle) - 2 * Math.cos(3 * angle) - Math.cos(4 * angle);
+                return { x: x * scale, y: -y * scale };
+            }
+
+            class Particle {
+                constructor(targetX, targetY) {
+                    this.x = canvas.width / 2;
+                    this.y = canvas.height / 2;
+                    this.targetX = (canvas.width / 2) + targetX + (Math.random() - 0.5) * 15;
+                    this.targetY = (canvas.height / 2) + targetY + (Math.random() - 0.5) * 15;
+                    this.size = Math.random() * 1.5 + 0.5;
+                    this.color = `hsl(330, 100%, ${Math.random() * 40 + 40}%)`;
+                    this.vx = (Math.random() - 0.5) * 15;
+                    this.vy = (Math.random() - 0.5) * 15;
+                    this.friction = 0.85;
+                    this.ease = Math.random() * 0.02 + 0.02;
+                }
+                update(phase) {
+                    if (phase === 'draw' || phase === 'hold') {
+                        let dx = this.targetX - this.x;
+                        let dy = this.targetY - this.y;
+                        this.vx += dx * this.ease;
+                        this.vy += dy * this.ease;
+                    } else if (phase === 'reverse') {
+                        let dx = (canvas.width / 2) - this.x;
+                        let dy = (canvas.height / 2) - this.y;
+                        this.vx += dx * this.ease * 2;
+                        this.vy += dy * this.ease * 2;
+                        if (this.size > 0.05) this.size -= 0.05;
+                    }
+                    this.vx *= this.friction;
+                    this.vy *= this.friction;
+                    this.x += this.vx;
+                    this.y += this.vy;
+                }
+                draw() {
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, Math.max(0, this.size), 0, Math.PI * 2);
+                    ctx.fillStyle = this.color;
+                    ctx.fill();
+                }
+            }
+
+            function animate() {
+                ctx.fillStyle = 'rgba(3, 0, 2, 0.2)';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                let elapsed = Date.now() - startTime;
+
+                if (drawing && animationPhase === 'draw') {
+                    if (t <= maxT) {
+                        let pos = getHeartPoint(t);
+                        for (let j = 0; j < 30; j++) {
+                            particles.push(new Particle(pos.x, pos.y));
+                        }
+                        t += 0.06;
+                    } else {
+                        drawing = false;
+                        message.classList.add('show-text');
+                    }
+                }
+
+                if (elapsed > 15000 && animationPhase !== 'reverse') {
+                    animationPhase = 'reverse';
+                    message.classList.remove('show-text');
+                }
+
+                for (let i = particles.length - 1; i >= 0; i--) {
+                    let p = particles[i];
+                    p.update(animationPhase);
+                    p.draw();
+                    if (animationPhase === 'reverse' && p.size <= 0.05) {
+                        particles.splice(i, 1);
+                    }
+                }
+
+                // when reverse phase completes and all particles are gone, stop audio and end animation
+                if (animationPhase === 'reverse' && particles.length === 0) {
+                    if (bgAudio && audioPlaying) { try { bgAudio.pause(); bgAudio.currentTime = 0; } catch(e) {} audioPlaying = false; }
+                    if (heartAnimFrame) { cancelAnimationFrame(heartAnimFrame); heartAnimFrame = null; }
+                    return;
+                }
+
+                heartAnimFrame = requestAnimationFrame(animate);
+            }
+
+            animate();
+        }
+    </script>
+</body>
+</html>
